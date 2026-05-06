@@ -19,7 +19,7 @@ import {
 
 const LogoPlaceholder = ({ className }: { className?: string }) => (
   <div className={`flex items-center justify-center shrink-0 ${className}`}>
-    <img src="/rg logo - Edited.png" alt="RG Cellulars" className="w-full h-full object-contain drop-shadow-lg" />
+    <img src="/rg logo - Edited.png" alt="RG Cellulars" className="w-full h-full object-contain drop-shadow-lg" decoding="async" />
   </div>
 );
 
@@ -189,7 +189,7 @@ const ImagePlaceholder = ({ label, src }: { label?: string; src?: string }) => {
   if (src) {
     return (
       <div className="w-full h-full min-h-[200px] sm:min-h-[250px] flex items-center justify-center rounded-2xl md:rounded-3xl overflow-hidden relative shadow-2xl border border-white/10 bg-black/20 group">
-        <img src={src} alt={label || 'Image'} className="w-full h-full object-contain p-2 md:p-4 transition-transform duration-700 group-hover:scale-105" />
+        <img src={src} alt={label || 'Image'} className="w-full h-full object-contain p-2 md:p-4 transition-transform duration-700 group-hover:scale-105" decoding="async" />
       </div>
     );
   }
@@ -248,21 +248,24 @@ export default function App() {
   // Animation variants
   const variants = {
     enter: (direction: number) => ({
-      x: direction > 0 ? 50 : -50,
+      x: direction > 0 ? 30 : -30,
       opacity: 0,
-      scale: 0.98,
+      scale: 0.99,
+      z: 0
     }),
     center: {
       zIndex: 1,
       x: 0,
       opacity: 1,
       scale: 1,
+      z: 0
     },
     exit: (direction: number) => ({
       zIndex: 0,
-      x: direction < 0 ? 50 : -50,
+      x: direction < 0 ? 30 : -30,
       opacity: 0,
-      scale: 0.98,
+      scale: 0.99,
+      z: 0
     }),
   };
 
@@ -270,8 +273,8 @@ export default function App() {
     <div className="h-[100dvh] bg-[#0a0a0c] text-slate-200 flex flex-col font-sans overflow-hidden selection:bg-indigo-500/30">
       {/* Dynamic Background */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-900/10 blur-[120px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-purple-900/10 blur-[120px]" />
+        <div className="absolute top-[-5%] left-[-5%] w-[40%] h-[40%] rounded-full bg-indigo-500/5 blur-[80px] will-change-[filter]" />
+        <div className="absolute bottom-[-5%] right-[-5%] w-[40%] h-[40%] rounded-full bg-purple-500/5 blur-[80px] will-change-[filter]" />
       </div>
 
       {/* Header */}
@@ -292,7 +295,7 @@ export default function App() {
 
       {/* Main Slide Area */}
       <main className="flex-1 relative z-10 w-full">
-        <AnimatePresence initial={false} custom={direction} mode="sync">
+        <AnimatePresence initial={false} custom={direction} mode="wait">
           <motion.div
             key={current}
             custom={direction}
@@ -300,8 +303,14 @@ export default function App() {
             initial="enter"
             animate="center"
             exit="exit"
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="absolute inset-0 overflow-y-auto overflow-x-hidden transition-all flex flex-col"
+            transition={{ 
+              type: 'spring', 
+              stiffness: 350, 
+              damping: 35,
+              mass: 1,
+              opacity: { duration: 0.2 }
+            }}
+            className="absolute inset-0 overflow-y-auto overflow-x-hidden flex flex-col will-change-transform"
           >
             <div className="w-full max-w-7xl mx-auto flex flex-col my-auto py-10 md:py-16 px-4 sm:px-8 shrink-0">
               
@@ -309,33 +318,33 @@ export default function App() {
               {slide.layout === 'centered' && (
                 <div className="flex flex-col items-center text-center max-w-4xl mx-auto w-full">
                   <motion.div 
-                    initial={{ y: 20, opacity: 0 }} 
+                    initial={{ y: 10, opacity: 0 }} 
                     animate={{ y: 0, opacity: 1 }} 
-                    transition={{ delay: 0.1 }}
+                    transition={{ delay: 0.1, duration: 0.4 }}
                   >
                     {slide.icon}
                   </motion.div>
                   <motion.h2 
-                    initial={{ y: 20, opacity: 0 }} 
+                    initial={{ y: 10, opacity: 0 }} 
                     animate={{ y: 0, opacity: 1 }} 
-                    transition={{ delay: 0.2 }}
+                    transition={{ delay: 0.15, duration: 0.4 }}
                     className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 text-white tracking-tight leading-tight"
                   >
                     {slide.title}
                   </motion.h2>
                   <motion.h3 
-                    initial={{ y: 20, opacity: 0 }} 
+                    initial={{ y: 10, opacity: 0 }} 
                     animate={{ y: 0, opacity: 1 }} 
-                    transition={{ delay: 0.3 }}
+                    transition={{ delay: 0.2, duration: 0.4 }}
                     className="text-lg md:text-xl lg:text-2xl text-indigo-400 mb-6 font-medium"
                   >
                     {slide.subtitle}
                   </motion.h3>
                   {slide.content && (
                     <motion.p 
-                      initial={{ y: 20, opacity: 0 }} 
+                      initial={{ y: 10, opacity: 0 }} 
                       animate={{ y: 0, opacity: 1 }} 
-                      transition={{ delay: 0.4 }}
+                      transition={{ delay: 0.25, duration: 0.4 }}
                       className="text-base sm:text-lg md:text-xl text-slate-300 max-w-3xl leading-relaxed px-4"
                     >
                       {slide.content}
@@ -343,9 +352,9 @@ export default function App() {
                   )}
                   {slide.bullets && (
                     <motion.ul 
-                      initial={{ y: 20, opacity: 0 }} 
+                      initial={{ y: 10, opacity: 0 }} 
                       animate={{ y: 0, opacity: 1 }} 
-                      transition={{ delay: 0.4 }}
+                      transition={{ delay: 0.3, duration: 0.4 }}
                       className="text-left mt-6 md:mt-8 space-y-3 w-full bg-white/5 p-6 md:p-8 rounded-2xl md:rounded-3xl border border-white/10"
                     >
                       {slide.bullets.map((bullet, idx) => (
@@ -375,21 +384,21 @@ export default function App() {
               {slide.layout === 'split' && (
                 <div className="flex flex-col md:flex-row gap-8 lg:gap-16 items-center w-full h-full pb-4">
                   <div className="flex-1 w-full flex flex-col justify-center">
-                    <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1 }}>
+                    <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1, duration: 0.4 }}>
                       {slide.icon}
                     </motion.div>
                     <motion.h2 
-                      initial={{ y: 20, opacity: 0 }} 
+                      initial={{ y: 10, opacity: 0 }} 
                       animate={{ y: 0, opacity: 1 }} 
-                      transition={{ delay: 0.2 }}
+                      transition={{ delay: 0.15, duration: 0.4 }}
                       className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 md:mb-4 text-white tracking-tight"
                     >
                       {slide.title}
                     </motion.h2>
                     <motion.h3 
-                      initial={{ y: 20, opacity: 0 }} 
+                      initial={{ y: 10, opacity: 0 }} 
                       animate={{ y: 0, opacity: 1 }} 
-                      transition={{ delay: 0.3 }}
+                      transition={{ delay: 0.2, duration: 0.4 }}
                       className="text-base sm:text-lg lg:text-xl text-indigo-400 mb-6 lg:mb-8 font-medium"
                     >
                       {slide.subtitle}
@@ -397,9 +406,9 @@ export default function App() {
                     
                     {slide.metrics && (
                       <motion.div 
-                        initial={{ y: 20, opacity: 0 }} 
+                        initial={{ y: 10, opacity: 0 }} 
                         animate={{ y: 0, opacity: 1 }} 
-                        transition={{ delay: 0.4 }}
+                        transition={{ delay: 0.25, duration: 0.4 }}
                         className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 mb-6 md:mb-8"
                       >
                         {slide.metrics.map((metric, idx) => (
@@ -413,9 +422,9 @@ export default function App() {
 
                     {slide.bullets && (
                       <motion.ul 
-                        initial={{ y: 20, opacity: 0 }} 
+                        initial={{ y: 10, opacity: 0 }} 
                         animate={{ y: 0, opacity: 1 }} 
-                        transition={{ delay: 0.5 }}
+                        transition={{ delay: 0.3, duration: 0.4 }}
                         className="space-y-3 lg:space-y-4"
                       >
                         {slide.bullets.map((bullet, idx) => (
